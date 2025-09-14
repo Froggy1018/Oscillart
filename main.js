@@ -17,6 +17,17 @@ oscillator.type = "sine";
 oscillator.start();
 gainNode.gain.value = 0;
 
+var amplitude = null;
+
+
+//define canvas var
+var canvas = document.getElementByID("canvas");
+var ctx = canvas.getContect("2d");
+//the ctx is just the part of the canvas that we draw on
+var width = ctx.canvas.width;
+var height = ctx.canvas.height;
+
+
 notes = new Map();
 notes.set(C, 261.6);
 notes.set(D,293.7);
@@ -41,4 +52,35 @@ function handle() {
     frequency(input.value);
     var userInput = String(input.value);
     frequency(notes.get(userInput));
+}
+
+
+
+var counter = 0;
+function drawWave(){
+    ctx.clearRect(0,0,width,height);
+    //clears everythign inside the canvas
+    x=0;
+    y=height/2;
+    ctx.moveTo (x,y);
+    //moves our pointer to the left-most middle of our canvas, and it'll always start from there
+    ctx.beginPath();
+    //tells the computer that we're ready to start painting
+    counter = 0;
+    interval = setInterval (line,20);
+
+}
+
+function line(){
+    frequency = pitch/10000;
+    y=height/2 + (amplitude *Math.sin(Math.PI*2*frequency*x));
+    ctx.lineTo(x,y);
+    ctx.stroke();
+    x++;
+    counter++;
+
+    if (counter > 50){
+        clearInterval (interval);
+    }
+    
 }
